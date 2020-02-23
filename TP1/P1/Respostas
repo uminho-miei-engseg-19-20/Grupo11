@@ -1,0 +1,18 @@
+Pergunta 1.1
+
+Todos os comandos geraram a sequencia de bytes pseudoaleatorios, 
+com exceção do terceiro. Isto deve-se ao facto do programa random 
+bloquear à espera de entropia suficiente para gerar os bytes
+pseudoaleatorios. O que fez com que o programa bloqueasse quando lhe 
+foram pedidos 1024 bytes.
+Por outro lado isto nao aconteceu quando foi usado o urandom, uma 
+vez que este é nao bloqueante e não depende da entropia.
+
+-------------------------------------------------------------------------
+
+Pergunta 1.2
+
+Ambos os comandos deram a sequencia de bytes pseudoaleatorios desejada,
+sem bloquear. Isto deve-se ao facto de termos o package haveged que está
+a gerar entropia no linux, fazendo com que o comando random não bloqueie
+à espera de entropia suficiente para gerar os 1024 bytes.
