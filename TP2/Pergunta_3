@@ -2,13 +2,13 @@ Escolhemos como exemplo as empresas NOS e Vodafone, com os servidores 88.157.220
 
 Os resultados do ssh audit ao servidor da NOS foram os seguintes:
 
-# general
+General
 (gen) banner: SSH-2.0-OpenSSH_7.4
 (gen) software: OpenSSH 7.4
 (gen) compatibility: OpenSSH 7.3+ (some functionality from 6.6), Dropbear SSH 2016.73+ (some functionality from 0.52)
 (gen) compression: enabled (zlib@openssh.com)
 
-# key exchange algorithms
+Key exchange algorithms
 (kex) curve25519-sha256                     -- [warn] unknown algorithm
 (kex) curve25519-sha256@libssh.org          -- [info] available since OpenSSH 6.5, Dropbear SSH 2013.62
 (kex) ecdh-sha2-nistp256                    -- [fail] using weak elliptic curves
@@ -33,7 +33,7 @@ Os resultados do ssh audit ao servidor da NOS foram os seguintes:
                                             `- [warn] using weak hashing algorithm
                                             `- [info] available since OpenSSH 2.3.0, Dropbear SSH 0.28
 
-# host-key algorithms
+Host-key algorithms
 (key) ssh-rsa                               -- [info] available since OpenSSH 2.5.0, Dropbear SSH 0.28
 (key) rsa-sha2-512                          -- [info] available since OpenSSH 7.2
 (key) rsa-sha2-256                          -- [info] available since OpenSSH 7.2
@@ -42,7 +42,7 @@ Os resultados do ssh audit ao servidor da NOS foram os seguintes:
                                             `- [info] available since OpenSSH 5.7, Dropbear SSH 2013.62
 (key) ssh-ed25519                           -- [info] available since OpenSSH 6.5
 
-# encryption algorithms (ciphers)
+Encryption algorithms (ciphers)
 (enc) chacha20-poly1305@openssh.com         -- [info] available since OpenSSH 6.5
                                             `- [info] default cipher since OpenSSH 6.9.
 (enc) aes128-ctr                            -- [info] available since OpenSSH 3.7, Dropbear SSH 0.52
@@ -76,7 +76,7 @@ Os resultados do ssh audit ao servidor da NOS foram os seguintes:
                                             `- [warn] using small 64-bit block size
                                             `- [info] available since OpenSSH 1.2.2, Dropbear SSH 0.28
 
-# message authentication code algorithms
+Message authentication code algorithms
 (mac) umac-64-etm@openssh.com               -- [warn] using small 64-bit tag size
                                             `- [info] available since OpenSSH 6.2
 (mac) umac-128-etm@openssh.com              -- [info] available since OpenSSH 6.2
@@ -97,7 +97,7 @@ Os resultados do ssh audit ao servidor da NOS foram os seguintes:
                                             `- [warn] using weak hashing algorithm
                                             `- [info] available since OpenSSH 2.1.0, Dropbear SSH 0.28
 
-# algorithm recommendations (for OpenSSH 7.4)
+Algorithm recommendations (for OpenSSH 7.4)
 (rec) -diffie-hellman-group14-sha1          -- kex algorithm to remove
 (rec) -ecdh-sha2-nistp256                   -- kex algorithm to remove
 (rec) -diffie-hellman-group-exchange-sha256 -- kex algorithm to remove
@@ -127,19 +127,19 @@ OpenSSH 7.4
 
 Os resultados do ssh audit ao servidor da Vodafone foram:
 
-# general
+General
 (gen) banner: SSH-2.0-dropbear_0.53.1
 (gen) software: Dropbear SSH 0.53.1
 (gen) compatibility: OpenSSH 3.9-6.6, Dropbear SSH 0.53-2014.66
 (gen) compression: enabled (zlib, zlib@openssh.com)
 
-# security
+Security
 (cve) CVE-2016-3116                -- (5.5) bypass command restrictions via xauth command injection
 (cve) CVE-2013-4434                -- (5.0) discover valid usernames through different time delays
 (cve) CVE-2013-4421                -- (5.0) cause DoS (memory consumption) via a compressed packet
 (cve) CVE-2012-0920                -- (7.1) execute arbitrary code or bypass command restrictions
 
-# key exchange algorithms
+Key exchange algorithms
 (kex) diffie-hellman-group1-sha1   -- [fail] removed (in server) since OpenSSH 6.7, unsafe algorithm
                                    `- [fail] disabled (in client) since OpenSSH 7.0, logjam attack
                                    `- [warn] using small 1024-bit modulus
@@ -148,14 +148,14 @@ Os resultados do ssh audit ao servidor da Vodafone foram:
 (kex) diffie-hellman-group14-sha1  -- [warn] using weak hashing algorithm
                                    `- [info] available since OpenSSH 3.9, Dropbear SSH 0.53
 
-# host-key algorithms
+Host-key algorithms
 (key) ssh-rsa                      -- [info] available since OpenSSH 2.5.0, Dropbear SSH 0.28
 (key) ssh-dss                      -- [fail] removed (in server) and disabled (in client) since OpenSSH 7.0, weak algorithm
                                    `- [warn] using small 1024-bit modulus
                                    `- [warn] using weak random number generator could reveal the key
                                    `- [info] available since OpenSSH 2.1.0, Dropbear SSH 0.28
 
-# encryption algorithms (ciphers)
+Encryption algorithms (ciphers)
 (enc) aes128-ctr                   -- [info] available since OpenSSH 3.7, Dropbear SSH 0.52
 (enc) 3des-ctr                     -- [info] available since Dropbear SSH 0.52
 (enc) aes256-ctr                   -- [info] available since OpenSSH 3.7, Dropbear SSH 0.52
@@ -180,7 +180,7 @@ Os resultados do ssh audit ao servidor da Vodafone foram:
                                    `- [warn] using weak cipher mode
                                    `- [info] available since Dropbear SSH 0.47
 
-# message authentication code algorithms
+Message authentication code algorithms
 (mac) hmac-sha1-96                 -- [fail] removed (in server) since OpenSSH 6.7, unsafe algorithm
                                    `- [warn] disabled (in client) since OpenSSH 7.2, legacy algorithm
                                    `- [warn] using encrypt-and-MAC mode
@@ -195,7 +195,7 @@ Os resultados do ssh audit ao servidor da Vodafone foram:
                                    `- [warn] using weak hashing algorithm
                                    `- [info] available since OpenSSH 2.1.0, Dropbear SSH 0.28
 
-# algorithm recommendations (for Dropbear SSH 0.53.1)
+Algorithm recommendations (for Dropbear SSH 0.53.1)
 (rec) -diffie-hellman-group1-sha1  -- kex algorithm to remove
 (rec) -ssh-dss                     -- key algorithm to remove
 (rec) -twofish128-cbc              -- enc algorithm to remove
