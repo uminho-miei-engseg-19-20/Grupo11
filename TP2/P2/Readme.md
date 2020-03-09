@@ -5,6 +5,7 @@
 [edp](./edp.pdf)
 [nos](./nos.pdf)
 
+
 #### 2. 
 
 O pior servidor é o da empresa NOS obtendo uma classificação B. 
