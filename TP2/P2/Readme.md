@@ -2,8 +2,8 @@
 
 #### 1. Resultados da análise de www.nos.pt e www.edp.com
 
-[www.edp.com](SSL Server Test_ www.edp.com (Powered by Qualys SSL Labs).pdf)
-[www.nos.pt](SSL Server Test_ www.nos.pt (Powered by Qualys SSL Labs).pdf)
+[edp](./edp.pdf)
+[nos](./nos.pdf)
 
 #### 2. 
 
