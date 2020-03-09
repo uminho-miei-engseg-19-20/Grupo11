@@ -33,43 +33,45 @@ Command line app that writes initComponents and pRDashComponents to STDOUT.
 
 import sys
 import json
-#from eVotUM.Cripto import eccblind
+from eVotUM.Cripto import eccblind
 
-initComponents, pRDashComponents = 90,90
+initComponents, pRDashComponents = eccblind.initSigner()
 
 def printUsage():
     print("Usage:")
-    print("   'python init-app.py' - Para obter pRDashComponents")
-    print("   'python init-app.py -init' - Para obter pRDashComponents e initComponents")
-    print("   (As componentes serao guardadas nos ficheiros '<Componente>.assinante')\n")
+    print("   'python desofusca-app.py -s <BlindSignature> -RDash <pRDashComponents>' - Para obter a assinatura")
+    print("   <BlindSignature> - assinatura ofuscada")
+    print("   <RDash> - Componentes pRDash (valor guarda no ficheiro '../pRDashComponents.assinante')")
+    print("   (A assinatura será guardadas no ficheiro 'assinatura.requerente')\n")
 
 def parseArgs():
-    if(len(sys.argv) == 1):
-        initPrDash()
-    elif(len(sys.argv) == 2 and sys.argv[1] == "-init"):
+    if(len(sys.argv) != 5):
+        printUsage
+    elif(sys.argv[1] == "-s" and sys.argv[3] == 'RDash'):
         initComps()
     else:
         printUsage()
 
 def initPrDash():
     print("\npRDashComponents: %s\n" % pRDashComponents)
-    saveComponents()
 
 def initComps():
     print("\nInit components: %s \n" % initComponents)
     print("\npRDashComponents: %s\n" % pRDashComponents)
-    saveComponents()
 
-def saveComponents():
-    with open("assinante.json","r") as f:
-        assinante = json.loads(f.read())
-    print(assinante)
-    assinante["initComponents"] = initComponents
-    assinante["pRDashComponents"] = pRDashComponents
+def getBlindComps():
+    with open("requerente.json","r") as f:
+        req = json.loads(f.read())
+    return req["blindComponents"]
+
+def saveSignature(s):
+    with open("requerente.json","r") as f:
+        req = json.loads(f.read())
     
-    with open("assinante.json","w") as f:
-        f.write(json.dumps(assinante))
-    
+    req["assinatura"] = s
+    with open("../requerente.json", 'w') as f:
+        f.write(json.dumps(req))
+
 if __name__ == "__main__":
     #main()
     parseArgs()
