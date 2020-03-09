@@ -2,9 +2,9 @@
 ###############################################################################
 # eVotUM - Electronic Voting System
 #
-# unblindSignature-app.py
+# initSigner-app.py
 #
-# Cripto-7.3.1 - Commmad line app to exemplify the usage of unblindSignature
+# Cripto-7.0.2 - Commmad line app to exemplify the usage of initSigner
 #       function (see eccblind.py)
 #
 # Copyright (c) 2016 Universidade do Minho
@@ -28,41 +28,47 @@
 #
 ###############################################################################
 """
-Command line app that receives Blind signature, Blind components and prDashComponents
-from STDIN and writes the unblinded signature to STDOUT.
+Command line app that writes initComponents and pRDashComponents to STDOUT.
 """
 
 import sys
+import json
 from eVotUM.Cripto import eccblind
 
+initComponents, pRDashComponents = eccblind.initSigner()
 
 def printUsage():
-    print("Usage: python unblindSignature-app.py")
+    print("Usage:")
+    print("   'python init-app.py' - Para obter pRDashComponents")
+    print("   'python init-app.py -init' - Para obter pRDashComponents e initComponents")
+    print("   (As componentes serao guardadas no ficheiro 'assinante.json')\n")
 
 def parseArgs():
-    if (len(sys.argv) > 1):
-        printUsage()
+    if(len(sys.argv) == 1):
+        initPrDash()
+    elif(len(sys.argv) == 2 and sys.argv[1] == "-init"):
+        initComps()
     else:
-        main()
+        printUsage()
 
-def showResults(errorCode, signature):
-    print("Output")
-    if (errorCode is None):
-        print("Signature: %s" % signature)
-    elif (errorCode == 1):
-        print("Error: pRDash components are invalid")
-    elif (errorCode == 2):
-        print("Error: blind components are invalid")
-    elif (errorCode == 3):
-        print("Error: invalid blind signature format")
+def initPrDash():
+    print("\npRDashComponents: %s\n" % pRDashComponents)
+    saveComponents()
 
-def main():
-    print("Input")
-    blindSignature = raw_input("Blind signature: ")
-    blindComponents = raw_input("Blind components: ")
-    pRDashComponents = raw_input("pRDash components: ")
-    errorCode, signature = eccblind.unblindSignature(blindSignature, pRDashComponents, blindComponents)
-    showResults(errorCode, signature)
+def initComps():
+    print("\nInit components: %s \n" % initComponents)
+    print("\npRDashComponents: %s\n" % pRDashComponents)
+    saveComponents()
+
+def saveComponents():
+    with open("assinante.json","r") as f:
+        assinante = json.loads(f.read())
+    assinante["initComponents"] = initComponents
+    assinante["pRDashComponents"] = pRDashComponents
+
+    with open("assinante.json","w") as f:
+        f.write(json.dumps(assinante))
 
 if __name__ == "__main__":
+    #main()
     parseArgs()

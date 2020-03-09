@@ -33,21 +33,38 @@ prComponents from STDIN and writes a message to STDOUT indicating if the signatu
 """
 
 import sys
+import json
 from eVotUM.Cripto import eccblind
 from eVotUM.Cripto import utils
 
 def printUsage():
-    print("Usage: python verifySignature-app.py public-key.pem")
+    print("Usage:")
+    print("   'python verify-app.py -cert <Cert> -msg <Mensagem> -SDash <Signature>' -f <FicheiroRequerente> - para obter verificação")
+    print("   <Cert> - caminho para o certificado")
+    print("   <Mensagem> - mensagem a ser testada")
+    print("   <SDash> - assinatura pós-desofuscação")
+    print("   (<FicheiroRequerente> - ficheiro com os dados das operações do Requerente")
 
 def parseArgs():
-    if (len(sys.argv) != 2):
+    if(len(sys.argv) != 9):
         printUsage()
+    elif(sys.argv[1] == "-cert" and sys.argv[3] == '-msg' and sys.argv[5] == "-SDash" and sys.argv[7] == '-f'):
+        msg = readMessage(sys.argv[4])
+        main(sys.argv[2],msg,sys.argv[6],sys.argv[8])
     else:
-        eccPublicKeyPath = sys.argv[1]
-        main(eccPublicKeyPath)
+        printUsage()
+
+
+def readMessage(path):
+    with open(path,"r") as f:
+        return f.read()
+
+def getComps(path):
+    with open(path, "r") as f:
+        requerente = json.loads(f.read())
+    return requerente["blindComponents"], requerente["pRComponents"]
 
 def showResults(errorCode, validSignature):
-    print("Output")
     if (errorCode is None):
         if (validSignature):
             print("Valid signature")
@@ -62,13 +79,9 @@ def showResults(errorCode, validSignature):
     elif (errorCode == 4):
         print("Error: invalid signature format")
 
-def main(eccPublicKeyPath):
+def main(eccPublicKeyPath,data,signature,compsPath):
     pemPublicKey = utils.readFile(eccPublicKeyPath)
-    print("Input")
-    data = raw_input("Original data: ")
-    signature = raw_input("Signature: ")
-    blindComponents = raw_input("Blind components: ")
-    pRComponents = raw_input("pR components: ")
+    blindComponents, pRComponents = getComps(compsPath)
     errorCode, validSignature = eccblind.verifySignature(pemPublicKey, signature, blindComponents, pRComponents, data)
     showResults(errorCode, validSignature)
 

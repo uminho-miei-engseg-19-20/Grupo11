@@ -68,41 +68,39 @@ def printUsage():
     print("   'python blindSignature-app.py -key <Chave Privada> -bmsg <Mensagem ofuscada>' - Para obter a assinatura ofuscada")
     print("   <Chave Privada> - Chave privada do assinante (Ficheiro 'key.pem')")
     print("   <Mensagem ofuscada> - Mensagem que sofreu o processo de ofuscação por parte do Requerente\n")
-    print("   (A assinatura ofuscada vai ser guardada no ficheiro blindSign.assinante)")
+    print("   (A assinatura ofuscada vai ser guardada no ficheiro assinante.json)")
 
 def parseArgs():
-    if (len(sys.argv) != 5):
+    if(len(sys.argv) != 5):
         printUsage()
+    elif(sys.argv[1] == "-key" and sys.argv[3] == '-bmsg'):
+        eccPrivateKeyPath = sys.argv[2]
+        blindM= sys.argv[4]
+        main(eccPrivateKeyPath, blindM)
     else:
-        eccPrivateKeyPath = sys.argv[1]
-        main(eccPrivateKeyPath)
+        printUsage()
 
 def readInitalComponents():
     with open("assinante.json" , 'r') as f:
         assinante= json.loads(f.read())
-    return assinante["initialComponents"]
-
-def getBlindMsg():
-    return sys.argv[4]
-
-def getPrivateKey():
-    return sys.argv[2]
+    return assinante["initComponents"]
 
 def askPassphrase():
-    passphrase = input("Passphrase: ")
+    passphrase = raw_input("Passphrase: ")
     return passphrase
 
 def saveBlindSignature(blindSig):
-    with open("../assinante.json", "r") as f:
+    with open("assinante.json", "r") as f:
         assinante= json.loads(f.read())
     assinante["blindSignature"] = blindSig
-    with open("../assinante.json", "w") as f:
+    with open("assinante.json", "w") as f:
         f.write(json.dumps(assinante))
 
 def showResults(errorCode, blindSignature):
     print("Output")
     if (errorCode is None):
-        print("Blind signature: %s" % blindSignature)
+        print("Blind signature: %s \nsaved!" % blindSignature)
+        saveBlindSignature(blindSignature)
     elif (errorCode == 1):
         print("Error: it was not possible to retrieve the private key")
     elif (errorCode == 2):
@@ -110,12 +108,13 @@ def showResults(errorCode, blindSignature):
     elif (errorCode == 3):
         print("Error: invalid blind message format")
 
-def main(eccPrivateKeyPath):
+def main(eccPrivateKeyPath,blindM):
     pemKey = utils.readFile(eccPrivateKeyPath)
-    print("Input")
-    passphrase = raw_input("Passphrase: ")
-    blindM = raw_input("Blind message: ")
-    initComponents = raw_input("Init components: ")
+    print("aqui1")
+    passphrase = askPassphrase()
+    print("aqui2")
+    initComponents = readInitalComponents()
+    print("aqui3")
     errorCode, blindSignature = eccblind.generateBlindSignature(pemKey, passphrase, blindM, initComponents)
     showResults(errorCode, blindSignature)
 

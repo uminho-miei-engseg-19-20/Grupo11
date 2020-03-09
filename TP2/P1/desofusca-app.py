@@ -2,7 +2,7 @@
 ###############################################################################
 # eVotUM - Electronic Voting System
 #
-# initSigner-app.py 
+# initSigner-app.py
 #
 # Cripto-7.0.2 - Commmad line app to exemplify the usage of initSigner
 #       function (see eccblind.py)
@@ -32,22 +32,54 @@ Command line app that writes initComponents and pRDashComponents to STDOUT.
 """
 
 import sys
+import json
 from eVotUM.Cripto import eccblind
 
 def printUsage():
-    print("Usage: python initSigner-app.py")
+    print("Usage:")
+    print("   'python desofusca-app.py -s <BlindSignature> -RDash <pRDashComponents>' - Para obter a assinatura")
+    print("   <BlindSignature> - assinatura ofuscada")
+    print("   <RDash> - Componentes pRDash (valor no ficheiro assinante.json")
+    print("   (A assinatura será guardadas no ficheiro 'requerente.json')\n")
 
 def parseArgs():
-    if (len(sys.argv) > 1):
+    if(len(sys.argv) != 5):
         printUsage()
+    elif(sys.argv[1] == "-s" and sys.argv[3] == '-RDash'):
+        main(sys.argv[2],sys.argv[4])
     else:
-        main()
+        printUsage()
 
-def main():
-    initComponents, pRDashComponents = eccblind.initSigner()
+def getBlindComps():
+    with open("requerente.json","r") as f:
+        req = json.loads(f.read())
+    return req["blindComponents"]
+
+def saveSignature(s):
+    with open("requerente.json","r") as f:
+        req = json.loads(f.read())
+
+    req["assinatura"] = s
+    with open("requerente.json", 'w') as f:
+        f.write(json.dumps(req))
+
+def showResults(errorCode, signature):
     print("Output")
-    print("Init components: %s" % initComponents)
-    print("pRDashComponents: %s" % pRDashComponents)
+    if (errorCode is None):
+        saveSignature(signature)
+        print("Signature: %s \nsaved" % signature)
+    elif (errorCode == 1):
+        print("Error: pRDash components are invalid")
+    elif (errorCode == 2):
+        print("Error: blind components are invalid")
+    elif (errorCode == 3):
+        print("Error: invalid blind signature format")
+
+def main(blindSignature, pRDashComponents):
+    blindComponents = getBlindComps()
+    errorCode, signature = eccblind.unblindSignature(blindSignature, pRDashComponents, blindComponents)
+    showResults(errorCode, signature)
 
 if __name__ == "__main__":
+    #main()
     parseArgs()

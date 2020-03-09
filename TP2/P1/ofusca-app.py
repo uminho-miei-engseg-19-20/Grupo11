@@ -35,39 +35,48 @@ import sys
 import json
 from eVotUM.Cripto import eccblind
 
-initComponents, pRDashComponents = eccblind.initSigner()
-
 def printUsage():
     print("Usage:")
     print("   'python ofusca-app.py -msg <Mensagem> -RDash <pRDashComponents>' - Para obter Blind Message e guardar Blind components e pRComponents")
-    print("   <Mensagem> - mensagem a ser ofuscada")
-    print("   <RDash> - Componentes pRDash (valor guarda no ficheiro '../pRDashComponents.assinante')")
-    print("   (As componentes serao guardadas nos ficheiros '<Componente>.requerente')\n")
+    print("   <Mensagem> - caminho do ficheiro com a mensagem a ser ofuscada")
+    print("   <RDash> - Componentes pRDash")
 
 def parseArgs():
     if(len(sys.argv) != 5):
-        printUsage
-    elif(sys.argv[1] == "-msg" and sys.argv[3] == 'RDash'):
-        initComps()
+        printUsage()
+    elif(sys.argv[1] == "-msg" and sys.argv[3] == '-RDash'):
+        msg = readMessage(sys.argv[2])
+        pRDashComponents = sys.argv[4]
+        main(msg,pRDashComponents)
     else:
         printUsage()
 
-def initPrDash():
-    print("\npRDashComponents: %s\n" % pRDashComponents)
+def readMessage(path):
+    with open(path,"r") as f:
+        return f.read()
 
-def initComps():
-    print("\nInit components: %s \n" % initComponents)
-    print("\npRDashComponents: %s\n" % pRDashComponents)
+def showResults(errorCode, result):
+    print("Output")
+    if (errorCode is None):
+        blindComponents, pRComponents, blindM = result
+        saveComponents(blindM,blindComponents,pRComponents)
+        print("Blind message: %s" % blindM)
+    elif (errorCode == 1):
+        print("Error: pRDash components are invalid")
 
 def saveComponents(bm,bc,prc):
-    with open("../requente.json" , 'r') as f:
+    with open("requerente.json", "r") as f:
         requerente = json.loads(f.read())
     requerente["blindMessage"] = bm
     requerente["pRComponents"] = prc
     requerente["blindComponents"] = bc
-    
-    with open("../requerente.json", 'w') as f:
+
+    with open("requerente.json", 'w') as f:
         f.write(json.dumps(requerente))
+
+def main(msg,pRDashComponents):
+    errorCode, result = eccblind.blindData(pRDashComponents,msg)
+    showResults(errorCode,result)
 
 if __name__ == "__main__":
     #main()
