@@ -45,11 +45,11 @@ creatingNewTimestamp(){
 Com isto, quando vamos ver o bloco inicial da Blockchain:
 ```json
 Block {
-    index: 0,
-    timestamp: '2020-3-20 13:23:58',
-    data: 'Bloco inicial da koreCoin',
-    previousHash: '0',
-    hash: '35d48461db193c1ac3c3f44722be169d05bf2e76159146a980734c8835e00f92' }
+    "index": 0,
+    "timestamp": "2020-3-20 13:23:58",
+    "data": "Bloco inicial da koreCoin",
+    "previousHash": "0",
+    "hash": "35d48461db193c1ac3c3f44722be169d05bf2e76159146a980734c8835e00f92" }
 ```
 Vemos que tanto os dados como o timestamp foram alterados.
 
