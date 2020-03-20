@@ -1,11 +1,11 @@
 # Pergunta 1 - Construindo uma blockchain
 Este exercício é composto por duas questões mais pequenas. 
 
-* Pergunta 1.1 [#pergunta-11]
+* [Pergunta 1.1](#pergunta-11)
     
     Alterar o método `Genesis Block` de modo a que o timestamp seja a data e dia de hoje e o dado incluído nesse Bloco seja "Bloco inicial da koreCoin"
 
-* Pergunta 1.2 [#pergunta-12]
+* [Pergunta 1.2](#pergunta-12)
     
     Adicionar blocos simulando várias transações em cada um deles.
 
