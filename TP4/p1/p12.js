@@ -10,7 +10,7 @@ class Block {
         this.data = data;
         this.previousHash = previousHash;
 
-        this.hash = '';
+        this.hash = this.calculateHash();
     }
 
     calculateHash(){
@@ -67,10 +67,10 @@ koreCoin.addBlock(new Block (1, "01/01/2018", {amount: 20}));
 koreCoin.addBlock(new Block (2, "02/01/2018", {amount: 40}));
 koreCoin.addBlock(new Block (3, "02/01/2018", {amount: 40}));
 
-koreCoin.addBlock(new Block(4,koreCoin.creatingNewTimestamp(),{Autor: "Grupo11"}));
-koreCoin.addBlock(new Block(5,koreCoin.creatingNewTimestamp(),{Membro: "Nelson"}));
-koreCoin.addBlock(new Block(6,koreCoin.creatingNewTimestamp(),{Membro: "André"}));
-koreCoin.addBlock(new Block(7,koreCoin.creatingNewTimestamp(),{Membro: "Pedro"}));
+koreCoin.addBlock(new Block(4,koreCoin.creatingNewTimestamp(),{amount: 150}));
+koreCoin.addBlock(new Block(5,koreCoin.creatingNewTimestamp(),{amount: 40, Block1: 10}));
+koreCoin.addBlock(new Block(6,koreCoin.creatingNewTimestamp(),{amount: 10, Block2: 23}));
+koreCoin.addBlock(new Block(7,koreCoin.creatingNewTimestamp(),{amount: 90, Block3: 60}));
 
 
 console.log('Is Blockchain valid? ' + koreCoin.isChainValid());

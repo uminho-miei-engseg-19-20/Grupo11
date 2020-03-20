@@ -10,7 +10,7 @@ class Block {
         this.data = data;
         this.previousHash = previousHash;
 
-        this.hash = '';
+        this.hash = this.calculateHash();
     }
 
     calculateHash(){
@@ -70,3 +70,4 @@ koreCoin.addBlock(new Block (3, "02/01/2018", {amount: 40}));
 //console.log(JSON.stringify(koreCoin, null, 4));
 
 console.log('Is Blockchain valid? ' + koreCoin.isChainValid());
+console.log(koreCoin.chain[0]);
