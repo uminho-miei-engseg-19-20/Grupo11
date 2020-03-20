@@ -1,4 +1,4 @@
-// Exp 1.1 - KoreCoin - Blockchain
+// P1.1
 
 const SHA256 = require('crypto-js/sha256');
 
@@ -67,12 +67,6 @@ koreCoin.addBlock(new Block (2, "02/01/2018", {amount: 40}));
 koreCoin.addBlock(new Block (3, "02/01/2018", {amount: 40}));
 
 
-console.log(JSON.stringify(koreCoin, null, 4));
+//console.log(JSON.stringify(koreCoin, null, 4));
 
-console.log('Is Blockchain valid? ' + koreCoin.isChainValid());
-
-console.log('Vamos mudar valores da blockchain...');
-koreCoin.chain[1].data = {amount: 100}; //Pego no 2º block da blockchain e altero os dados.
-console.log('Is Blockchain valid? ' + koreCoin.isChainValid());
-koreCoin.chain[1].hash = koreCoin.chain[1].calculateHash();
 console.log('Is Blockchain valid? ' + koreCoin.isChainValid());
