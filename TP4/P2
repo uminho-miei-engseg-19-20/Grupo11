@@ -1,0 +1,60 @@
+Pergunta 2.1
+
+Dificuldade 2 -> 0.098s
+Dificuldade 3 -> 0.373s
+Dificuldade 4 -> 1.627s
+Dificuldade 5 -> 24.163s
+
+Pode-se concluir que com o aumento da dificuldade o tempo que demora a minerar aumenta,
+exponencialmente.
+
+
+{
+  "index": 1,
+  "data": {
+    "transactions": [
+          {
+            "to": "fjlakdj",
+            "amount": 3,
+            "from": "akjflw"
+          },
+          {
+            "to": "q3nf394hjg-random-miner-address-34nf3i4nflkn3oi",
+            "amount": 1,
+            "from": "network"
+          }
+    ],
+    "proof-of-work": 18
+  },
+  "hash": "7db52d058d565177725a510b61ba8778770c63f337c84268e2a6532761f234c8",
+  "timestamp": "2020-03-21 15:06:38.237195"
+}
+
+Pergunta 2.2
+
+O algoritmo consiste em incrementar um número até que este seja divisível por 9,
+e divisível pelo o último "proof-of-work". Quando isto acontecer o miner recebe a
+snakeCoin.
+
+Não parece ser o algoritmo indicado para minerar, pois o número a descobrir é
+facilmente previsível, podendo o miner evitar o processo de incrementação. E gerar
+instantaniamente o próximo "proof-of-work". Por exemplo:
+
+Caso o primeiro proof-of-work seja 9.
+Podemos chegar diretamente a um próximo proof-of-work, multiplicando por 2.9*2 = 18 & 18%9 = 0
+
+Podemos ainda continuar a seguir este raciocínio.
+18*2 = 36 & 36%9 = 0 & 36%18 = 0
+
+Isto porque:
+Seja x divisível por 9 e x divisível por y, onde y é o last "proof-of-work".
+x/9 = i1 (i1 representa um número inteiro, sem casas decimais)
+x/y = i2 (i2 representa um número inteiro, sem casas decimais)
+
+Utilizando agora 2x como próximo "proof-of-work" e x como last "proof-of-work" temos:
+
+2x/9 = 2*i1, que continua a ser um inteiro (trivial) logo 2x%9 = 0
+2x/x = 2 que é um número inteiro logo 2x%x = 0
+
+Assim concluímos que podemos obter o próximo proof-of-work simplesmente multiplicando
+o ultimo por 2.
