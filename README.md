@@ -7,5 +7,5 @@ Grupo 11
 * A80975 - Pedro Freitas - [@PedroFreitas90](https://github.com/PedroFreitas90)
 
 ## **Pastas**
-Pasta dos [Projetos](https://github.com/uminho-miei-engseg-19-20/Grupo11/Projetos)
-Pasta das [Aulas Práticas](https://github.com/uminho-miei-engseg-19-20/Grupo11/AulasPráticas)
+* Pasta dos [Projetos](https://github.com/uminho-miei-engseg-19-20/Grupo11/tree/master/Projetos)
+* Pasta das [Aulas Práticas](https://github.com/uminho-miei-engseg-19-20/Grupo11/tree/master/AulasPráticas)
