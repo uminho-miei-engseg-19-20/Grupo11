@@ -1,5 +1,5 @@
 
-###1:
+**1:**
 
 Considerando  que em cada 1000 linhas de codigo existem entre 5 a 50 bugs temos:
 
@@ -21,7 +21,7 @@ Considerando  que em cada 1000 linhas de codigo existem entre 5 a 50 bugs temos:
   Ou seja entre 10.000.000 e 100.000.000 bugs 
   
   
-  ###2:
+  **2:**
   
   Não é possivel estabelecer uma relação direta entre o numero de bugs, e o número de vulnerabilidades existentes no código.
   Fica assim impossivel determinar a quantidade de vulnerabilades presentes nestas companhias.
