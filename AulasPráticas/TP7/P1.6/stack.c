@@ -8,13 +8,13 @@ int bof(char *str)
 {
 	char buffer[24];
 	/* The following statement has a buffer overflow problem */
-    /* Correção
-    * Truncar o array de caracteres ao tamanho do buffer, inserindo
-    * o caracter de fim de string na posição x do array str
-    * onde x é o comprimento do buffer
-    */
-    if(strlen(str) > 24)
-        str[24] = '\0';
+	/* Correção
+	* Truncar o array de caracteres ao tamanho do buffer, inserindo
+	* o caracter de fim de string na posição x do array str
+	* onde x é o comprimento do buffer
+	*/
+    	if(strlen(str) > 24)
+        	str[24] = '\0';
 	strcpy(buffer, str);
 	return 1;
 }
