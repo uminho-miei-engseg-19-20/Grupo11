@@ -19,4 +19,4 @@ int main()
 
 Ao executar a função _vulneravel_ com as alterações feitas no main(), obtemos o erro _Segmentation fault_
 
-![](../imagens/1_1.png)
+![](../imagens/1_1.PNG)
