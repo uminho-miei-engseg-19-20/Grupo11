@@ -19,7 +19,7 @@ Já para explorar a vulnerabilidade referente à não validação dos metacaract
 `./filetype filename;ls`
 
 
-Ou poderia ainda utilizar o *autocomplete* (através da tecla TAB) e ter acesso aos nomes dos ficheiros e diretórios de toda a estrutura.
+Ou poderia ainda utilizar o *autocomplete* e ter acesso aos nomes dos ficheiros e diretorias.
 
 ### 3
 
