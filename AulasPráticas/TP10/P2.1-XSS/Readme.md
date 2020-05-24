@@ -82,18 +82,57 @@ Attacker sends a malicious URL to victim
 ### Passo 7
 Na caixa de input 'Enter your credit card number:' injetamos o script: `<script>alert('Credit Card...')</script>` e clicamos
 no *Purchase*. Vemos que uma alerta foi criado, podendo concluir assim que este é vulnerável a um ataque.
-
+![Passo7Done](./xss-71.png)
 
 No caso de tentarmos fazer o mesmo na caixa de input `Enter your three digit access code:` vemos que esta está protegida:
+![Passo7Error](./xss-72.png)
 
-
+Se tentarmos introduzir qualquer tipo de script nas caixas das quantidades aparece um alerta a informar que só aceita inteiros.
 
 ### Passo 8
+Não é necesária nenhuma ação.
 
 ### Passo 9
+Não é necesária nenhuma ação.
+#### Reflected and DOM-Based XSS
+
+DOM-based XSS is another form of reflected XSS. Both are triggered by sending a link with inputs that are reflected to the browser. The difference between DOM and 'traditional' reflected XSS is that, with DOM, the payload will never go to the server. It will only ever be processed by the client.
+
+* Attacker sends a malicious URL to victim
+* Victim clicks on the link
+* That link may load a malicious web page or a web page they use (are logged into?) that has a vulnerable route/handler
+* If it’s a malicious web page, it may use it’s own JavaScript to attack another page/url with a vulnerable route/handler
+* The vulnerable page renders the payload and executes attack in the user’s context on that page/site
+* Attacker’s malicious script may run commands with the privileges of local account
+
+Victim does not realize attack occurred … Malicious attackers don’t use <script>alert('xss')</ script>
+
 
 ### Passo 10
+Começamos por abrir a consola web na página e selecionar o "depurador" para vermos toda a estrutura e código JS da página.
+Depois se acedermos ao ficheiro `WebGoat/js/goatApp/view/GoatRouter.js`. 
+Nesse ficheiro procuramos pelas routes e encontramos a linha `'test/:param': 'testRoute'`.
+
+Com isto concluímos que a route para o test code seria: `start.mvc#test/`
 
 ### Passo 11
+Abrimos um novo separador e começamos por introduzir o URL descoberto no Passo 10: `http://localhost:8080/WebGoat/start.mvc#test/`.
+
+Depois como queremos introduzir um script metemos como parâmetro: `<script>webgoat.customjs.phoneHome()</script>`.
+Porém isto vai dar problemas pois a última `/` funciona como separadores de Routes e não funcionaria como o script que queremos. Por isso substituímos essa barra por `%2F` obtendo assim o script final: `http://localhost:8080/WebGoat/start.mvc#test/<script>webgoat.customjs.phoneHome()<%2Fscript>`. Ou então o respetivo URL encode: `http://localhost:8080/WebGoat/start.mvc#test/%3Cscript%3Ewebgoat.customjs.phoneHome()%3C%2Fscript%3E`. 
+
+Depois disto vamos aceder mais uma vez à consola web do browser e na console obtemos a mensagem:
+``
+phone home said {"lessonCompleted":true,"feedback":"Congratulations. You have successfully completed the assignment.","output":"phoneHome Response is 550178464","assignment":"DOMCrossSiteScripting","attemptWasMade":true}
+``
+
+Com isto concluímos que a resposta seria **550178464**.
 
 ### Passo 12
+
+Quiz:
+* **1** - Solução 4
+* **2** - Solução 3
+* **3** - Solução 1
+* **4** - Solução 2
+* **5** - Solução 4
