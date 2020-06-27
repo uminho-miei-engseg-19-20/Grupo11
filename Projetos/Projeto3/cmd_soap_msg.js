@@ -54,7 +54,7 @@ function hashPrefix(hashtype, hash){
         'SHA256': bytes(bytearray([0x30, 0x31, 0x30, 0x0d, 0x06, 0x09, 0x60, 0x86, 0x48, 0x01,
                                    0x65, 0x03, 0x04, 0x02, 0x01, 0x05, 0x00, 0x04, 0x20]))
     }
-    return prefix.hashtype + hash
+    return prefix[hashtype] + hash
 }
 
 //GetCertificate(applicationId: xsd:base64Binary, userId: xsd:string)
