@@ -1,3 +1,5 @@
+var sha256 = require('js-sha256');
+
 //Função que devolve o URL do WSDL do SCMD (preprod ou prod)
 function get_wsdl(env) {
     /*Devolve URL do WSDL do SCMD.
@@ -78,3 +80,111 @@ function getcertificate(client, args){
     }
     return client.service.GetCertificate(request_data.applicationId, request_data.userId)
 }
+
+
+/* CCMovelSign(request: ns2:SignRequest) -> CCMovelSignResult: ns2:SignStatus
+# ns2:SignRequest(ApplicationId: xsd:base64Binary, DocName: xsd:string,
+#                  Hash: xsd:base64Binary, Pin: xsd:string, UserId: xsd:string)
+# ns2:SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string,
+#                   Message: xsd:string, ProcessId: xsd:string)*/
+function ccmovelsign(client, args, hashtype='SHA256'){
+    /*Prepara e executa o comando SCMD CCMovelSign.
+    Parameters
+    ----------
+    client : Client (zeep)
+        Client inicializado com o WSDL.
+    args : argparse.Namespace
+        argumentos a serem utilizados na mensagem SOAP.
+    hashtype: Tipo de hash
+        tipo de hash efetuada, do qual o digest args.hash é o resultado.
+    Returns
+    -------
+    SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string, Message: xsd:string,
+    ProcessId: xsd:string)
+        Devolve uma estrutura SignStatus com a resposta do CCMovelSign.
+    */
+    if (!args.includes('docName'))
+        args.docName = 'docname teste'
+    if (!args.includes('hash'))
+        args.hash = sha256('Nobody inspects the spammish repetition')
+    args.hash = hashPrefix(hashtype, args.hash)
+    request_data = {
+        'request': {
+            'ApplicationId': args.applicationId.encode('UTF-8'),
+            'DocName': args.docName,
+            'Hash': args.hash,
+            'Pin': args.pin,
+            'UserId': args.user
+        }
+    }
+    return client.service.CCMovelSign(request_data.request)
+}
+
+
+/* CCMovelMultipleSign(request: ns2:MultipleSignRequest,
+    #                              documents: ns2:ArrayOfHashStructure)
+    #                                  -> CCMovelMultipleSignResult: ns2:SignStatus
+    # ns2:MultipleSignRequest(ApplicationId: xsd:base64Binary, Pin: xsd:string,
+    #                                                           UserId: xsd:string)
+    # ns2:ArrayOfHashStructure(HashStructure: ns2:HashStructure[])
+    # ns2:HashStructure(Hash: xsd:base64Binary, Name: xsd:string, id: xsd:string)
+    # ns2:SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string,
+    #                   Message: xsd:string, ProcessId: xsd:string)*/
+    function ccmovelmultiplesign(client, args){
+        /*Prepara e executa o comando SCMD CCMovelMultipleSign.
+        Parameters
+        ----------
+        client : Client (zeep)
+            Client inicializado com o WSDL.
+        args : argparse.Namespace
+            argumentos a serem utilizados na mensagem SOAP.
+        Returns
+        -------
+        SignStatus
+            Devolve uma estrutura SignStatus com a resposta do CCMovelMultipleSign.
+        */
+        request_data = {
+            'request': {
+                'ApplicationId': args.applicationId.encode('UTF-8'),
+                'Pin': args.pin,
+                'UserId': args.user
+            },
+            'documents': {
+                'HashStructure': [
+                    {'Hash': sha256('Nobody inspects the spammish repetition'),
+                     'Name': 'docname teste1', 'id': '1234'},
+                    {'Hash': sha256('Always inspect the spammish repetition'),
+                     'Name': 'docname teste2', 'id': '1235'}
+                    ]}
+        }
+        return client.service.CCMovelMultipleSign(request_data.request, request_data.documents)
+    }
+
+    /*# ValidateOtp(code: xsd:string, processId: xsd:string, applicationId:
+        #                      xsd:base64Binary) -> ValidateOtpResult: ns2:SignResponse
+        # ns2:SignResponse(ArrayOfHashStructure: ns2:ArrayOfHashStructure,
+        #                          Signature: xsd:base64Binary, Status: ns2:SignStatus)
+        # ns2:ArrayOfHashStructure(HashStructure: ns2:HashStructure[])
+        # ns2:HashStructure(Hash: xsd:base64Binary, Name: xsd:string, id: xsd:string)
+        # ns2:SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string,
+        #                                   Message: xsd:string, ProcessId: xsd:string)*/
+        function validate_otp(client, args){
+            /*Prepara e executa o comando SCMD ValidateOtp.
+            Parameters
+            ----------
+            client : Client (zeep)
+                Client inicializado com o WSDL.
+            args : argparse.Namespace
+                argumentos a serem utilizados na mensagem SOAP.
+            Returns
+            -------
+            SignResponse
+                Devolve uma estrutura SignResponse com a resposta do CCMovelMultipleSign.
+            */
+            request_data = {
+                'applicationId': args.applicationId.encode('UTF-8'),
+                'processId': args.ProcessId,
+                'code': args.OTP,
+            }
+            return client.service.ValidateOtp(request_data.applicationId, request_data.processId, request_data.code)
+        }
