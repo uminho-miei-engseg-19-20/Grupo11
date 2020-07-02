@@ -1,4 +1,6 @@
 var sha256 = require('js-sha256');
+var soap = require('soap');
+
 
 //Função que devolve o URL do WSDL do SCMD (preprod ou prod)
 function get_wsdl(env) {
@@ -30,11 +32,17 @@ function getclient(env=0) {
         WSDL a devolver: 0 para preprod, 1 para prod.
     Returns
     -------
-    Zeep.Client
+    Soap.Client
         Devolve o cliente de ligação ao servidor SOAP da CMD. Por defeito devolve o
         servidor de preprod.
     */
-    return Client(get_wsdl(env))
+
+    client = soap.createClient(get_wsdl(env), function(err, client) {
+        client.MyFunction(args, function(err, result) {
+            console.log(result);
+        });
+    });
+    return client
 }
 
 
@@ -78,7 +86,11 @@ function getcertificate(client, args){
         'applicationId': args.applicationId.encode('UTF-8'),
         'userId': args.user
     }
-    return client.service.GetCertificate(request_data.applicationId, request_data.userId)
+
+    
+    return client.GetCertificate(request_data, function(err, result, rawResponse, soapHeader, rawRequest) {
+                return result
+           })
 }
 
 
@@ -117,7 +129,10 @@ function ccmovelsign(client, args, hashtype='SHA256'){
             'UserId': args.user
         }
     }
-    return client.service.CCMovelSign(request_data.request)
+    
+    return client.CCMovelSign(request_data.request, function(err, result, rawResponse, soapHeader, rawRequest) {
+                return result
+           })
 }
 
 
@@ -157,7 +172,10 @@ function ccmovelsign(client, args, hashtype='SHA256'){
                      'Name': 'docname teste2', 'id': '1235'}
                     ]}
         }
-        return client.service.CCMovelMultipleSign(request_data.request, request_data.documents)
+
+        return client.CCMovelMultipleSign(request_data.request, function(err, result, rawResponse, soapHeader, rawRequest) {
+                    return result
+               })
     }
 
     /*# ValidateOtp(code: xsd:string, processId: xsd:string, applicationId:
@@ -186,5 +204,8 @@ function ccmovelsign(client, args, hashtype='SHA256'){
                 'processId': args.ProcessId,
                 'code': args.OTP,
             }
-            return client.service.ValidateOtp(request_data.applicationId, request_data.processId, request_data.code)
+            
+            return client.ValidateOtp(request_data.request, function(err, result, rawResponse, soapHeader, rawRequest) {
+                return result
+            })
         }
