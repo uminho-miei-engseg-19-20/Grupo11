@@ -36,13 +36,41 @@ function getclient(env=0) {
         Devolve o cliente de ligação ao servidor SOAP da CMD. Por defeito devolve o
         servidor de preprod.
     */
+   var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.open('POST', 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc?wsdl', true);
 
-    client = soap.createClient(get_wsdl(env), function(err, client) {
-        client.MyFunction(args, function(err, result) {
-            console.log(result);
-        });
-    });
-    return client
+   // build SOAP request
+   var sr =
+    '<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">'+
+    '<soap-env:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">'+
+        '<wsa:Action>http://Ama.Authentication.Service/CCMovelSignature/GetCertificate</wsa:Action>'+
+        '<wsa:MessageID>urn:uuid:59dbff85-9583-4019-8242-6f6a330e487f</wsa:MessageID>'+
+        '<wsa:To>https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc</wsa:To>'+
+    '</soap-env:Header>'+
+    '<soap-env:Body>'+
+        '<ns0:GetCertificate xmlns:ns0="http://Ama.Authentication.Service/">'+
+            '<ns0:applicationId>YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2</ns0:applicationId>'+
+            '<ns0:userId>918133837</ns0:userId>'+
+        '</ns0:GetCertificate>'+
+    '</soap-env:Body>'+
+    '</soap-env:Envelope>';
+
+   xmlhttp.onreadystatechange = function () {
+       if (xmlhttp.readyState == 4) {
+           if (xmlhttp.status == 200) {
+               console.log(xmlhttp.responseText);
+               // alert('done. use firebug/console to see network response');
+           }else {
+               console.log(xmlhttp.status)
+           }
+       }
+   }
+   // Send the POST request
+   xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+   xmlhttp.send(sr);
+   // send request
+
 }
 
 
@@ -83,7 +111,7 @@ function getcertificate(client, args){
         Devolve o certificado do cidadão e a hierarquia de certificação.
     */
     request_data = {
-        'applicationId': args.applicationId.encode('UTF-8'),
+        'applicationId': args.applicationId,
         'userId': args.user
     }
 
@@ -122,7 +150,7 @@ function ccmovelsign(client, args, hashtype='SHA256'){
     args.hash = hashPrefix(hashtype, args.hash)
     request_data = {
         'request': {
-            'ApplicationId': args.applicationId.encode('UTF-8'),
+            'ApplicationId': args.applicationId,
             'DocName': args.docName,
             'Hash': args.hash,
             'Pin': args.pin,
@@ -160,7 +188,7 @@ function ccmovelsign(client, args, hashtype='SHA256'){
         */
         request_data = {
             'request': {
-                'ApplicationId': args.applicationId.encode('UTF-8'),
+                'ApplicationId': args.applicationId,
                 'Pin': args.pin,
                 'UserId': args.user
             },
@@ -200,7 +228,7 @@ function ccmovelsign(client, args, hashtype='SHA256'){
                 Devolve uma estrutura SignResponse com a resposta do CCMovelMultipleSign.
             */
             request_data = {
-                'applicationId': args.applicationId.encode('UTF-8'),
+                'applicationId': args.applicationId,
                 'processId': args.ProcessId,
                 'code': args.OTP,
             }
@@ -209,3 +237,26 @@ function ccmovelsign(client, args, hashtype='SHA256'){
                 return result
             })
         }
+
+
+
+function getCertificateMockUp(name){
+    return name + ' Certificate'
+}
+
+function CCMovelSignMockUp(name){
+    return name + ' CCMovelSign'
+}
+
+function CCMovelMultipleSignMockUp(name){
+    return name + ' CCMovelMultipleSign'
+}
+
+function ValidateOtpMockUp(name){
+    return name + ' ValidateOtp'
+}
+
+module.exports.getCertificateMockUp = getCertificateMockUp
+module.exports.CCMovelSignMockUp = CCMovelSignMockUp
+module.exports.CCMovelMultipleSignMockUp = CCMovelMultipleSignMockUp
+module.exports.ValidateOtpMockUp = ValidateOtpMockUp
