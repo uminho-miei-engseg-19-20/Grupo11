@@ -1,4 +1,5 @@
 const axios = require('axios-https-proxy-fix');
+const { sha256 } = require('js-sha256');
 
 /**
  * @param {object} opts easy-soap-request options
@@ -95,7 +96,6 @@ async function getCertificateRequest(user_id, application_id) {
     const { headers, body, statusCode } = response;
     //console.log(statusCode);
     //console.log(headers);
-    //console.log(body);
     return response;
 };
 // *------------------------------------------------ getCertificate ------------------------------------------------* //
@@ -151,6 +151,8 @@ async function CCMovelSignRequest(user_id,application_id, docname, hash,cmd_pin)
     //console.log(headers);
     //console.log(body);
     //console.log(statusCode);
+    pre_message = body.substring(body.search('<a:Message>') + 11)
+    response.message = pre_message.substring(0, pre_message.search('<'))
     return response;
 };
 // *------------------------------------------------ CCMovelSignature -----------------------------------------------* //
@@ -162,11 +164,11 @@ async function CCMovelSignRequest(user_id,application_id, docname, hash,cmd_pin)
 * @param {String} id nome do documento a ser assinado
 * @returns {String} xml com o pedido  
 */
-function getMultSignHashStructures(hash,name,id) {
+function getMultSignHashStructures(name, index) {
     xml = '<ama1:HashStructure>' + 
-            '<ama1:Hash>' + String(hash) + '</ama1:Hash>' + 
+            '<ama1:Hash>' + sha256(name) + '</ama1:Hash>' + 
             '<ama1:Name>' + String(name) + '</ama1:Name>' + 
-            '<ama1:id>' + String(id) + '</ama1:id>' +
+            '<ama1:id>' + String(index) + '</ama1:id>' +
         '</ama1:HashStructure>'
     
         return xml
@@ -181,10 +183,10 @@ function getMultSignHashStructures(hash,name,id) {
 * @param {Array} pre_struct array com objetos compostos por hash, name e id
 * @returns {String} xml com o pedido  
 */
-function getCCMovelMultSignXML(user_id,application_id, docname, hash,cmd_pin, pre_struct) {
+function getCCMovelMultSignXML(user_id, application_id, docnames, cmd_pin) {
     let hash_struct = ''
-    pre_struct.forEach(element => {
-        hash_struct += getMultSignHashStructures(element.hash, element.name, element.id)
+    docnames.forEach((element,index) => {
+        hash_struct += getMultSignHashStructures(element,index)
     });
     
       xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ama="http://Ama.Authentication.Service/" xmlns:ama1="http://schemas.datacontract.org/2004/07/Ama.Structures.CCMovelSignature">' + 
@@ -216,26 +218,25 @@ function getCCMovelMultSignXML(user_id,application_id, docname, hash,cmd_pin, pr
 * @param {String} cmd_pin pin da chave móvel digital
 * @returns {String} response com o documento assinado   
 */
-async function CCMovelMultSignRequest(user_id,application_id, docname, hash,cmd_pin) {
-    const xml = getCCMovelMultSignXML(user_id,application_id, docname, hash,cmd_pin);
+async function CCMovelMultSignRequest(user_id,application_id, docnames, hash, cmd_pin) {
+    const xml = getCCMovelMultSignXML(user_id,application_id, docnames  , hash, cmd_pin);
     
     const url = 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc';
     
-    //const sampleHeaders = {
-    //    'Content-Type': 'text/xml;charset=UTF-8',
-    //    SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/GetCertificate',
-    //};
-
     const sampleHeaders = {
         'Content-Type': 'text/xml;charset=UTF-8',
-        SOAPAction: null,
+        SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/CCMovelMultipleSign',
     };
 
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 1000 });
     const { headers, body, statusCode } = response;
+    
     //console.log(headers);
-    console.log(body);
+    //console.log(response)
+    //console.log(body);
     //console.log(statusCode);
+    pre_message = body.substring(body.search('<a:Message>') + 11)
+    response.message = pre_message.substring(0, pre_message.search('<'))
     return response;
 };
 
@@ -256,8 +257,8 @@ function getValidateOTPXML(ama_code,process_id, application_id) {
           '<!--Optional:-->' + 
           '<ama:code>' + String(ama_code) + '</ama:code>' + 
           '<!--Optional:-->' + 
-          '<ama:processId>' + String(process_id) + '</ama:processId>'
-          '<!--Optional:-->'
+          '<ama:processId>' + String(process_id) + '</ama:processId>' +
+          '<!--Optional:-->' + 
           '<ama:applicationId>' + String(application_id) + '</ama:applicationId>' + 
        '</ama:ValidateOtp>' + 
     '</soapenv:Body>' +
@@ -277,21 +278,18 @@ async function validateOTPRequest(ama_code, process_id, application_id) {
     
     const url = 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc';
     
-    //const sampleHeaders = {
-    //    'Content-Type': 'text/xml;charset=UTF-8',
-    //    SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/GetCertificate',
-    //};
-
     const sampleHeaders = {
         'Content-Type': 'text/xml;charset=UTF-8',
-        SOAPAction: null,
+        SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/ValidateOtp',
     };
-
+    console.log(xml)
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 1000 });
     const { headers, body, statusCode } = response;
     //console.log(headers);
-    console.log(body);
+    //console.log(body);
     //console.log(statusCode);
+    pre_message = body.substring(body.search('<a:Message>') + 11)
+    response.message = pre_message.substring(0, pre_message.search('<'))
     return response;
 };
 // *------------------------------------------------ ValidateOTP ----------------------------------------------------* //

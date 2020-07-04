@@ -83,6 +83,65 @@ function ccmovelsign(user_id, application_id, docname, hash, cmd_pin){
 
     return SOAPRequest.CCMovelSignRequest(user_id, application_id, docname, hash, cmd_pin)
 }
+
+
+/* CCMovelMultipleSign(request: ns2:MultipleSignRequest,
+                                  documents: ns2:ArrayOfHashStructure)
+                                      -> CCMovelMultipleSignResult: ns2:SignStatus
+     ns2:MultipleSignRequest(ApplicationId: xsd:base64Binary, Pin: xsd:string,
+                                                               UserId: xsd:string)
+     ns2:ArrayOfHashStructure(HashStructure: ns2:HashStructure[])
+     ns2:HashStructure(Hash: xsd:base64Binary, Name: xsd:string, id: xsd:string)
+     ns2:SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string,
+                       Message: xsd:string, ProcessId: xsd:string)*/
+function ccmovelmultiplesign(userid, application_id, docnames, pin){
+    /*Prepara e executa o comando SCMD CCMovelMultipleSign.
+
+    Parameters
+    ----------
+    client : Client (zeep)
+        Client inicializado com o WSDL.
+    args : argparse.Namespace
+        argumentos a serem utilizados na mensagem SOAP.
+
+    Returns
+    -------
+    SignStatus
+        Devolve uma estrutura SignStatus com a resposta do CCMovelMultipleSign.
+
+    */
+
+    return SOAPRequest.CCMovelMultSignRequest(userid, application_id, docnames, pin)
+}
+
+
+/* ValidateOtp(code: xsd:string, processId: xsd:string, applicationId:
+    #                      xsd:base64Binary) -> ValidateOtpResult: ns2:SignResponse
+    # ns2:SignResponse(ArrayOfHashStructure: ns2:ArrayOfHashStructure,
+    #                          Signature: xsd:base64Binary, Status: ns2:SignStatus)
+    # ns2:ArrayOfHashStructure(HashStructure: ns2:HashStructure[])
+    # ns2:HashStructure(Hash: xsd:base64Binary, Name: xsd:string, id: xsd:string)
+    # ns2:SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string,
+    #                                   Message: xsd:string, ProcessId: xsd:string)*/
+function validate_otp(code, p_id, application_id){
+        /*Prepara e executa o comando SCMD ValidateOtp.
+    
+        Parameters
+        ----------
+        client : Client (zeep)
+            Client inicializado com o WSDL.
+        args : argparse.Namespace
+            argumentos a serem utilizados na mensagem SOAP.
+    
+        Returns
+        -------
+        SignResponse
+            Devolve uma estrutura SignResponse com a resposta do CCMovelMultipleSign.
+    
+        */
+        return SOAPRequest.validateOTPRequest(code, p_id, application_id)
+}   
+
 /*
 const userId = 932115032
 const applicationId = 'Q2hhbmdlIHRvIHlvdXIgQXBwbGljYXRpb25JZA=='
@@ -95,3 +154,5 @@ let signature = ccmovelsign(userId, applicationId, docname, hash, cmd_pin)*/
 
 module.exports.getcertificate = getcertificate
 module.exports.ccmovelsign = ccmovelsign
+module.exports.ccmovelmultiplesign = ccmovelmultiplesign
+module.exports.validate_otp = validate_otp
