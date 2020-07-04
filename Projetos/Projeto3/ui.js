@@ -5,6 +5,19 @@ const PropTypes = require('prop-types');
 const {Text, Color} = require('ink');
 const new_cmd_soap_msg = require('./new_cmd_soap_msg')
 
+function DisplayAction(props){
+	const error = props.error;
+	if(error){
+		return error.map((value, index) => {
+			return <Text key={index}><Color red>{value}</Color></Text>
+		})	
+	}else{
+		return <Text>{props.operation}: <Color green>{props.statusCode}</Color></Text>
+	}
+		
+}
+
+
 
 class App extends Component {
 	constructor(props) {
@@ -14,31 +27,51 @@ class App extends Component {
 			pin: props.pin,
 			docName: props.docName,
 			operation: props.operation,
-			applicationId: props.applicationId, 
+			applicationId: props.applicationId,
+			error: undefined,
 			data: [] };
 	}
 
 	async componentDidMount() {
 		if(this.state.operation == 'GetCertificate' || this.state.operation == 'gc') {
-			const result = await new_cmd_soap_msg.getcertificate(this.state.user, this.state.applicationId)
-			this.setState({ 
-				operation: 'GetCertificate',
-				data: result });	
+			if(this.state.user){
+				const result = await new_cmd_soap_msg.getcertificate(this.state.user, this.state.applicationId)
+				this.setState({ 
+					operation: 'GetCertificate',
+					data: result });
+			}else {
+				this.setState({
+					error: ['No user passed, use --user="XXX 000000000"']
+				})
+			}		
 		}
 		if(this.state.operation == 'CCMovelSign' || this.state.operation == 'ms') {
-			const result = await new_cmd_soap_msg.ccmovelsign(this.state.user, this.state.applicationId, this.state.docName, undefined, this.state.pin)
-			this.setState({ 
-				operation: 'CCMovelSign',
-				data: result });	
+			if(this.state.user &&  this.state.docName && this.state.pin){
+				const result = await new_cmd_soap_msg.ccmovelsign(this.state.user, this.state.applicationId, this.state.docName, undefined, this.state.pin)
+				this.setState({ 
+					operation: 'CCMovelSign',
+					data: result });
+			} else {
+				let err = []
+				if(!this.state.user) {
+					err.push('No user passed, use --user="XXX 000000000"')
+				}
+				if(!this.state.docName){
+					err.push('No docName passed, use --docName="xxxx.pdf"')
+				}
+				if(!this.state.pin){
+					err.push('No pin passed, use --pin="xxxx"')
+				}
+				this.setState({
+					error: err
+				})
+			}
 		}
 	}
-	
-	
+
 	render() {
 		return (
-			<div>
-				<Text>{this.state.operation}: <Color green>{this.state.data.statusCode}</Color></Text>
-			</div>
+			<DisplayAction error={this.state.error} operation={this.state.operation} statusCode={this.state.data.statusCode}/>
 		);
 	  }
 }
@@ -53,11 +86,7 @@ App.propTypes = {
 };
 
 App.defaultProps = {
-	user: '+351 918133837',
-	pin: '0000',
 	applicationId: 'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2',
-	operation: 'GetCertificate',
-	docName: './CMD-SOAP/LICENSE'
 };
 
 module.exports = App;
