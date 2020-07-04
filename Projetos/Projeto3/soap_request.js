@@ -76,7 +76,6 @@ function getCertificateXML(user_id, application_id) {
        '</ns0:GetCertificate>' + 
     '</soap-env:Body>' + 
  '</soap-env:Envelope>';
-    console.log(xml)
     return xml;
 };
 
@@ -92,13 +91,11 @@ async function getCertificateRequest(user_id, application_id) {
         'Content-Type': 'text/xml;charset=UTF-8',
         SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/GetCertificate',
     };
-
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 1000 });
     const { headers, body, statusCode } = response;
     //console.log(statusCode);
     //console.log(headers);
-    console.log(body);
-    
+    //console.log(body);
     return response;
 };
 // *------------------------------------------------ getCertificate ------------------------------------------------* //
@@ -112,15 +109,15 @@ async function getCertificateRequest(user_id, application_id) {
 * @param {String} cmd_pin pin da chave móvel digital
 * @returns {String} xml com o pedido  
 */
-function getCCMovelSignXML(user_id,application_id, docname, hash,cmd_pin) {
-    xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ama="http://Ama.Authentication.Service/" xmlns:ama1="http://schemas.datacontract.org/2004/07/Ama.Structures.CCMovelSignature">' + 
+function getCCMovelSignXML(user_id,application_id, docname, hash,cmd_pin) {   
+   xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ama="http://Ama.Authentication.Service/" xmlns:ama1="http://schemas.datacontract.org/2004/07/Ama.Structures.CCMovelSignature">' + 
     '<soapenv:Header/>' + 
     '<soapenv:Body>' + 
        '<ama:CCMovelSign>' + 
           '<!--Optional:-->' + 
           '<ama:request>' + 
              '<ama1:ApplicationId>' + String(application_id) + '</ama1:ApplicationId>' + 
-             '<!--Optional:-->'
+             
              '<ama1:DocName>' + String(docname) + '</ama1:DocName>' + 
              '<ama1:Hash>' + String(hash) + '</ama1:Hash>' + 
              '<ama1:Pin>' + String(cmd_pin) + '</ama1:Pin>' + 
@@ -142,23 +139,17 @@ function getCCMovelSignXML(user_id,application_id, docname, hash,cmd_pin) {
 */
 async function CCMovelSignRequest(user_id,application_id, docname, hash,cmd_pin) {
     const xml = getCCMovelSignXML(user_id,application_id, docname, hash,cmd_pin);
-    
     const url = 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc';
     
-    //const sampleHeaders = {
-    //    'Content-Type': 'text/xml;charset=UTF-8',
-    //    SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/GetCertificate',
-    //};
-
     const sampleHeaders = {
         'Content-Type': 'text/xml;charset=UTF-8',
-        SOAPAction: null,
+        SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/CCMovelSign',
     };
-
+    
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 1000 });
     const { headers, body, statusCode } = response;
     //console.log(headers);
-    console.log(body);
+    //console.log(body);
     //console.log(statusCode);
     return response;
 };
@@ -196,24 +187,24 @@ function getCCMovelMultSignXML(user_id,application_id, docname, hash,cmd_pin, pr
         hash_struct += getMultSignHashStructures(element.hash, element.name, element.id)
     });
     
-    xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ama="http://Ama.Authentication.Service/" xmlns:ama1="http://schemas.datacontract.org/2004/07/Ama.Structures.CCMovelSignature">' + 
-    '<soapenv:Header/>' + 
-    '<soapenv:Body>' + 
-       '<ama:CCMovelMultipleSign>' + 
-          '<!--Optional:-->' +
-          '<ama:request>' + 
-             '<ama1:ApplicationId>' + String(application_id) + '</ama1:ApplicationId>' + 
-             '<ama1:Pin>' + String(cmd_pin) + '</ama1:Pin>' + 
-             '<ama1:UserId>' + String(user_id) + '</ama1:UserId>' +
-          '</ama:request>' + 
-          '<!--Optional:-->' + 
-          '<ama:documents>' + 
-             '<!--Zero or more repetitions:-->' + 
-                hash_struct + 
-          '</ama:documents>' + 
-       '</ama:CCMovelMultipleSign>' + 
-    '</soapenv:Body>' + 
- '</soapenv:Envelope>'
+      xml = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ama="http://Ama.Authentication.Service/" xmlns:ama1="http://schemas.datacontract.org/2004/07/Ama.Structures.CCMovelSignature">' + 
+      '<soapenv:Header/>' + 
+      '<soapenv:Body>' + 
+         '<ama:CCMovelMultipleSign>' + 
+            '<!--Optional:-->' +
+            '<ama:request>' + 
+               '<ama1:ApplicationId>' + String(application_id) + '</ama1:ApplicationId>' + 
+               '<ama1:Pin>' + String(cmd_pin) + '</ama1:Pin>' + 
+               '<ama1:UserId>' + String(user_id) + '</ama1:UserId>' +
+            '</ama:request>' + 
+            '<!--Optional:-->' + 
+            '<ama:documents>' + 
+               '<!--Zero or more repetitions:-->' + 
+                  hash_struct + 
+            '</ama:documents>' + 
+         '</ama:CCMovelMultipleSign>' + 
+      '</soapenv:Body>' + 
+   '</soapenv:Envelope>'
     return xml;
 }
 

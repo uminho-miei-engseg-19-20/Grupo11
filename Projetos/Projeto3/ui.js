@@ -1,26 +1,63 @@
 'use strict';
 const React = require('react');
+const { Component } = require('react');
 const PropTypes = require('prop-types');
 const {Text, Color} = require('ink');
-const cmd_soap_msg = require('./cmd_soap_msg')
+const new_cmd_soap_msg = require('./new_cmd_soap_msg')
 
-const App = ({user, pin}) => (
-	<div>
-		<Text>Teste 1 - GetCertificate, <Color green>{cmd_soap_msg.getCertificateMockUp(user)}</Color></Text>
-		<Text>Teste 2 - CCMovelSign, <Color green>{cmd_soap_msg.CCMovelSignMockUp(user)}</Color></Text>
-		<Text>Teste 3 - CCMovelMultipleSign, <Color green>{cmd_soap_msg.CCMovelMultipleSignMockUp(user)}</Color></Text>
-		<Text>Teste 4 - ValidateOtp, <Color green>{cmd_soap_msg.ValidateOtpMockUp(user)}</Color></Text>
-	</div>
-);	
+
+class App extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			user: props.user,
+			pin: props.pin,
+			docName: props.docName,
+			operation: props.operation,
+			applicationId: props.applicationId, 
+			data: [] };
+	}
+
+	async componentDidMount() {
+		if(this.state.operation == 'GetCertificate' || this.state.operation == 'gc') {
+			const result = await new_cmd_soap_msg.getcertificate(this.state.user, this.state.applicationId)
+			this.setState({ 
+				operation: 'GetCertificate',
+				data: result });	
+		}
+		if(this.state.operation == 'CCMovelSign' || this.state.operation == 'ms') {
+			const result = await new_cmd_soap_msg.ccmovelsign(this.state.user, this.state.applicationId, this.state.docName, undefined, this.state.pin)
+			this.setState({ 
+				operation: 'CCMovelSign',
+				data: result });	
+		}
+	}
+	
+	
+	render() {
+		return (
+			<div>
+				<Text>{this.state.operation}: <Color green>{this.state.data.statusCode}</Color></Text>
+			</div>
+		);
+	  }
+}
+
 
 App.propTypes = {
 	user: PropTypes.string,
-	pin: PropTypes.string	
+	pin: PropTypes.string,
+	applicationId: PropTypes.string,
+	operation: PropTypes.string,
+	docName: PropTypes.string
 };
 
 App.defaultProps = {
-	user: '918133837',
-	pin: '0000'
+	user: '+351 918133837',
+	pin: '0000',
+	applicationId: 'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2',
+	operation: 'GetCertificate',
+	docName: './CMD-SOAP/LICENSE'
 };
 
 module.exports = App;
