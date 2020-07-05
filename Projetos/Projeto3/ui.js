@@ -22,6 +22,7 @@ function DisplayAction(props){
 class App extends Component {
 	constructor(props) {
 		super(props);
+		
 		this.state = {
 			user: props.user,
 			pin: props.pin,
@@ -35,14 +36,15 @@ class App extends Component {
 			data: [] };
 	}
 
-	async componentDidMount() {
-		
+	componentDidMount() {
 		if(this.state.operation == 'GetCertificate' || this.state.operation == 'gc') {
 			if(this.state.user){
-				const result = await new_cmd_soap_msg.getcertificate(this.state.user, this.state.applicationId)
-				this.setState({ 
-					operation: 'GetCertificate',
-					data: result });
+				new_cmd_soap_msg.getcertificate(this.state.user, this.state.applicationId).then((result) => {
+					this.setState({ 
+						operation: 'GetCertificate',
+						data: result });
+				})
+				
 			}else {
 				this.setState({
 					error: ['No user passed, use --user="XXX 000000000"']
@@ -53,10 +55,12 @@ class App extends Component {
 
 		if(this.state.operation == 'CCMovelSign' || this.state.operation == 'ms') {
 			if(this.state.user &&  this.state.docName && this.state.pin){
-				const result = await new_cmd_soap_msg.ccmovelsign(this.state.user, this.state.applicationId, this.state.docName, undefined, this.state.pin)
-				this.setState({ 
-					operation: 'CCMovelSign',
-					data: result });
+				new_cmd_soap_msg.ccmovelsign(this.state.user, this.state.applicationId, this.state.docName, undefined, this.state.pin)
+					.then((result) => {
+						this.setState({ 
+							operation: 'CCMovelSign',
+							data: result });
+					})
 			} else {
 				let err = []
 				if(!this.state.user) {
@@ -76,10 +80,12 @@ class App extends Component {
 
 		if(this.state.operation == 'CCMovelMultSignRequest' || this.state.operation == 'mms') {
 			if(this.state.user &&  this.state.docNames && this.state.pin){
-				const result = await new_cmd_soap_msg.ccmovelmultiplesign(this.state.user, this.state.applicationId, this.state.docNames, this.state.pin)
-				this.setState({ 
-					operation: 'CCMovelMultSignRequest',
-					data: result });
+				new_cmd_soap_msg.ccmovelmultiplesign(this.state.user, this.state.applicationId, this.state.docNames, this.state.pin)
+					.then((result) => {
+						this.setState({ 
+							operation: 'CCMovelMultSignRequest',
+							data: result });
+					})
 			} else {
 				let err = []
 				if(!this.state.user) {
@@ -99,10 +105,11 @@ class App extends Component {
 
 		if(this.state.operation == 'ValidateOTP' || this.state.operation == 'otp') {
 			if(this.state.code &&  this.state.processId){
-				const result = await new_cmd_soap_msg.validate_otp(this.state.code, this.state.processId, this.state.applicationId)
-				this.setState({ 
-					operation: 'ValidateOTP',
-					data: result });
+				new_cmd_soap_msg.validate_otp(this.state.code, this.state.processId, this.state.applicationId).then((result) => {
+					this.setState({ 
+						operation: 'ValidateOTP',
+						data: result });
+				})	
 			} else {
 				let err = []
 				if(!this.state.code) {

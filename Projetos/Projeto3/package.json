@@ -7,28 +7,50 @@
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && ava"
+		"test": "jest"
+	},
+	"jest": {
+		"collectCoverage": true,
+		"transform": {
+			".*": "<rootDir>/node_modules/babel-jest"
+		},
+		"moduleFileExtensions": [
+			"js"
+		],
+		"unmockedModulePathPatterns": [
+			"react"
+		]
 	},
 	"files": [
 		"cli.js",
 		"ui.js"
 	],
 	"dependencies": {
+		"axios-https-proxy-fix": "^0.17.1",
+		"dom-parser": "^0.1.6",
+		"enzyme": "^3.11.0",
 		"import-jsx": "^4.0.0",
 		"ink": "^2.7.1",
+		"js-sha256": "^0.9.0",
 		"meow": "^7.0.1",
 		"prop-types": "^15.7.2",
-		"react": "^16.13.1"
+		"react": "^16.13.1",
+		"react-addons-test-utils": "^15.6.2",
+		"react-test-renderer": "^16.13.1",
+		"soap": "^0.31.0",
+		"xmlhttprequest": "^1.8.0"
 	},
 	"devDependencies": {
 		"@babel/preset-react": "^7.10.1",
 		"@babel/register": "^7.10.3",
 		"ava": "^3.9.0",
+		"babel-jest": "^26.1.0",
 		"chalk": "^4.1.0",
 		"eslint-config-xo-react": "^0.23.0",
 		"eslint-plugin-react": "^7.20.0",
 		"eslint-plugin-react-hooks": "^4.0.4",
 		"ink-testing-library": "^2.0.0",
+		"jest": "^26.1.0",
 		"xo": "^0.32.0"
 	},
 	"ava": {
