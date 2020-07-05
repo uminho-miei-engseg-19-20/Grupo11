@@ -1,6 +1,8 @@
 const axios = require('axios-https-proxy-fix');
 const { sha256 } = require('js-sha256');
-
+var path=require('path');
+var lib=path.join(path.dirname(require.resolve('axios')),'lib/adapters/http');
+var http=require(lib);
 /**
  * @param {object} opts easy-soap-request options
  * @param {string} opts.url endpoint URL
@@ -32,6 +34,7 @@ function soapRequest(opts = {
     axios({
       method: 'post',
       url,
+      adapter: http,
       headers,
       data: xml,
       timeout,
@@ -46,10 +49,10 @@ function soapRequest(opts = {
       });
     }).catch((error) => {
       if (error.response) {
-        console.error(`SOAP FAIL: ${error}`);
+        console.log(`SOAP FAIL: ${error}`);
         reject(error.response.data);
       } else {
-        console.error(`SOAP FAIL: ${error}`);
+        console.log(`SOAP FAIL: ${error}`);
         reject(error);
       }
     });
@@ -92,6 +95,7 @@ async function getCertificateRequest(user_id, application_id) {
         'Content-Type': 'text/xml;charset=UTF-8',
         SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/GetCertificate',
     };
+    //console.log(xml)
     const { response } = await soapRequest({ url: url, headers: sampleHeaders, xml: xml, timeout: 1000 });
     const { headers, body, statusCode } = response;
     //console.log(statusCode);

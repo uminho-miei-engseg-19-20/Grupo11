@@ -1,6 +1,58 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should add two numbers 1`] = `
+exports[`Test CCMovelMultSignRequest 1`] = `
+<span
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+  unstable__transformChildren={[Function]}
+>
+  CCMovelMultSignRequest
+  : 
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    200
+  </span>
+   
+  User does not have signature active
+</span>
+`;
+
+exports[`Test CCMovelSign 1`] = `
+<span
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+  unstable__transformChildren={[Function]}
+>
+  CCMovelSign
+  : 
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    200
+  </span>
+   
+  User does not have signature active
+</span>
+`;
+
+exports[`Test GetCertificate 1`] = `
 <span
   style={
     Object {
@@ -11,6 +63,16 @@ exports[`should add two numbers 1`] = `
 >
   GetCertificate
   : 
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    200
+  </span>
    
 </span>
 `;
