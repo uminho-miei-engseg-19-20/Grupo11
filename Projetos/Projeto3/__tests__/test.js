@@ -31,6 +31,40 @@ test("Test CCMovelMultSignRequest", async () => {
     console.log(result);
 });
 
+test("Test GetCertificate_erro", async () => {
+    const componentApp = renderer.create(<App operation="GetCertificate" user=""/>);
+    const result = await new_cmd_soap_msg.getcertificate('351 918133837', 'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2')
+    let tree = componentApp.toJSON();
+    expect(tree).toMatchSnapshot();
+    console.log(result);
+});
+
+test("Test CCMovelSign_erro", async () => {
+    const componentApp = renderer.create(<App operation="CCMovelSign" user="" docName="" pin=""/>);
+    const result = await new_cmd_soap_msg.ccmovelsign('351 918133837', 'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2', "xyz.pdf", undefined ,24142)
+    let tree = componentApp.toJSON();
+    expect(tree).toMatchSnapshot();
+    console.log(result);
+});
+
+
+test("Test CCMovelMultSignRequest_erro", async () => {
+    const componentApp = renderer.create(<App operation="CCMovelMultSignRequest" user="" docNames="" pin=""/>);
+    const result = await new_cmd_soap_msg.ccmovelmultiplesign('351 918133837', 'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2', ["xyz.pdf","yyy.pdf"],24142)
+    let tree = componentApp.toJSON();
+    expect(tree).toMatchSnapshot();
+    console.log(result);
+});
+
+test("Test ValidateOTP_erro", async () => {
+    const componentApp = renderer.create(<App operation="ValidateOTP" processId="" code=""/>);
+    const result = await new_cmd_soap_msg.validate_otp(21342,42111,'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2')
+    let tree = componentApp.toJSON();
+    expect(tree).toMatchSnapshot();
+    console.log(result);
+});
+
+
 /*test("Test ValidateOTP", async () => {
     const componentApp = renderer.create(<App operation="ValidateOTP" processId={42111} code={21342}/>);
     const result = await new_cmd_soap_msg.validate_otp(21342,42111,'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2')
