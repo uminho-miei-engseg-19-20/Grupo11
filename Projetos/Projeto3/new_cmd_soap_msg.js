@@ -22,29 +22,10 @@ function get_wsdl(env) {
     return wsdl[env]
 }
 
-//Devolve a hash acrescentada do prefixo do tipo de hash utilizada
-function hashPrefix(hashtype, hash){
-    /*Devolve a hash, à qual acrescenta o prefixo adequado ao hashtype utilizada.
-    Parameters
-    ----------
-    hashtype : string ('SHA256')
-        tipo de hash efetuada, do qual hash é o resultado.
-    hash : byte
-        hash digest
-    Returns
-    -------
-    byte
-        Devolve hash adicionada de prefixo adequado ao hashtype de hash utilizada.
-    */
-    prefix = {
-        'SHA256': '010\r\x06\t`\x86H\x01e\x03\x04\x02\x01\x05\x00\x04'
-    }
-    return prefix[hashtype] + hash
-}
 
 //GetCertificate(applicationId: xsd:base64Binary, userId: xsd:string)
 //                                      -> GetCertificateResult: xsd:string
-async function getcertificate(userId,applicationId){
+async function getcertificate(userId,applicationId, prod=false){
     /*
     /*Prepara e executa o comando SCMD GetCertificate.
     Parameters
@@ -58,12 +39,13 @@ async function getcertificate(userId,applicationId){
     str
         Devolve o certificado do cidadão e a hierarquia de certificação.
     */
-
-    return await SOAPRequest.getCertificateRequest(userId, applicationId)
+    let url = ''
+    prod?url=get_wsdl(1):url=get_wsdl(0)
+    return await SOAPRequest.getCertificateRequest(userId, applicationId, url)
 
 }
 
-function ccmovelsign(user_id, application_id, docname, hash, cmd_pin){
+function ccmovelsign(user_id, application_id, docname, hash, cmd_pin, prod=false){
     /*
     /*Prepara e executa o comando SCMD GetCertificate.
     Parameters
@@ -80,8 +62,10 @@ function ccmovelsign(user_id, application_id, docname, hash, cmd_pin){
     if(!hash){
         hash = sha256('Nobody inspects the spammish repetition')
     }
-
-    return SOAPRequest.CCMovelSignRequest(user_id, application_id, docname, hash, cmd_pin)
+    
+    let url = ''
+    prod?url=get_wsdl(1):url=get_wsdl(0)
+    return SOAPRequest.CCMovelSignRequest(user_id, application_id, docname, hash, cmd_pin, url)
 }
 
 
@@ -94,7 +78,7 @@ function ccmovelsign(user_id, application_id, docname, hash, cmd_pin){
      ns2:HashStructure(Hash: xsd:base64Binary, Name: xsd:string, id: xsd:string)
      ns2:SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string,
                        Message: xsd:string, ProcessId: xsd:string)*/
-function ccmovelmultiplesign(userid, application_id, docnames, pin){
+function ccmovelmultiplesign(userid, application_id, docnames, pin, prod=false){
     /*Prepara e executa o comando SCMD CCMovelMultipleSign.
 
     Parameters
@@ -111,7 +95,9 @@ function ccmovelmultiplesign(userid, application_id, docnames, pin){
 
     */
 
-    return SOAPRequest.CCMovelMultSignRequest(userid, application_id, docnames, pin)
+    let url = ''
+    prod?url=get_wsdl(1):url=get_wsdl(0)
+    return SOAPRequest.CCMovelMultSignRequest(userid, application_id, docnames, pin, url)
 }
 
 
@@ -123,7 +109,7 @@ function ccmovelmultiplesign(userid, application_id, docnames, pin){
     # ns2:HashStructure(Hash: xsd:base64Binary, Name: xsd:string, id: xsd:string)
     # ns2:SignStatus(Code: xsd:string, Field: xsd:string, FieldValue: xsd:string,
     #                                   Message: xsd:string, ProcessId: xsd:string)*/
-function validate_otp(code, p_id, application_id){
+function validate_otp(code, p_id, application_id, prod=false){
         /*Prepara e executa o comando SCMD ValidateOtp.
     
         Parameters
@@ -139,7 +125,10 @@ function validate_otp(code, p_id, application_id){
             Devolve uma estrutura SignResponse com a resposta do CCMovelMultipleSign.
     
         */
-        return SOAPRequest.validateOTPRequest(code, p_id, application_id)
+
+       let url = ''
+       prod?url=get_wsdl(1):url=get_wsdl(0)
+       return SOAPRequest.validateOTPRequest(code, p_id, application_id, url)
 }   
 
 /*

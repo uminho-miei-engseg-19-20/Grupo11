@@ -88,9 +88,9 @@ function getCertificateXML(user_id, application_id) {
 * @param {String} application_id id da aplicação
 * @returns {Object} response com a resposta ao pedido  
 */
-async function getCertificateRequest(user_id, application_id) {
+async function getCertificateRequest(user_id, application_id, url) {
+    console.log("Aquiii" + url)
     const xml = getCertificateXML(user_id, application_id);
-    const url = 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc';
     const sampleHeaders = {
         'Content-Type': 'text/xml;charset=UTF-8',
         SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/GetCertificate',
@@ -141,9 +141,8 @@ function getCCMovelSignXML(user_id,application_id, docname, hash,cmd_pin) {
 * @param {String} cmd_pin pin da chave móvel digital
 * @returns {String} response com o documento assinado   
 */
-async function CCMovelSignRequest(user_id,application_id, docname, hash,cmd_pin) {
+async function CCMovelSignRequest(user_id,application_id, docname, hash,cmd_pin, url) {
     const xml = getCCMovelSignXML(user_id,application_id, docname, hash,cmd_pin);
-    const url = 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc';
     
     const sampleHeaders = {
         'Content-Type': 'text/xml;charset=UTF-8',
@@ -222,11 +221,9 @@ function getCCMovelMultSignXML(user_id, application_id, docnames, cmd_pin) {
 * @param {String} cmd_pin pin da chave móvel digital
 * @returns {String} response com o documento assinado   
 */
-async function CCMovelMultSignRequest(user_id,application_id, docnames, hash, cmd_pin) {
-    const xml = getCCMovelMultSignXML(user_id,application_id, docnames  , hash, cmd_pin);
-    
-    const url = 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc';
-    
+async function CCMovelMultSignRequest(user_id,application_id, docnames, cmd_pin, url) {
+    const xml = getCCMovelMultSignXML(user_id,application_id, docnames, cmd_pin);
+    console.log("Aquiii" + url)
     const sampleHeaders = {
         'Content-Type': 'text/xml;charset=UTF-8',
         SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/CCMovelMultipleSign',
@@ -277,11 +274,9 @@ function getValidateOTPXML(ama_code,process_id, application_id) {
 * @returns {String} response com o documento assinado   
 */
 
-async function validateOTPRequest(ama_code, process_id, application_id) {
+async function validateOTPRequest(ama_code, process_id, application_id, url) {
     const xml = getValidateOTPXML(ama_code, process_id, application_id);
-    
-    const url = 'https://preprod.cmd.autenticacao.gov.pt/Ama.Authentication.Frontend/CCMovelDigitalSignature.svc';
-    
+   
     const sampleHeaders = {
         'Content-Type': 'text/xml;charset=UTF-8',
         SOAPAction: 'http://Ama.Authentication.Service/CCMovelSignature/ValidateOtp',

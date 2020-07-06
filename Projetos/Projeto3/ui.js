@@ -25,6 +25,7 @@ class App extends Component {
 		
 		this.state = {
 			user: props.user,
+			prod: props.prod,
 			pin: props.pin,
 			docNames: props.docNames ? props.docNames.split(',') : props.docNames,
 			docName: props.docName,
@@ -39,7 +40,7 @@ class App extends Component {
 	componentDidMount() {
 		if(this.state.operation == 'GetCertificate' || this.state.operation == 'gc') {
 			if(this.state.user){
-				new_cmd_soap_msg.getcertificate(this.state.user, this.state.applicationId).then((result) => {
+				new_cmd_soap_msg.getcertificate(this.state.user, this.state.applicationId, this.state.prod).then((result) => {
 					this.setState({ 
 						operation: 'GetCertificate',
 						data: result });
@@ -55,7 +56,7 @@ class App extends Component {
 
 		if(this.state.operation == 'CCMovelSign' || this.state.operation == 'ms') {
 			if(this.state.user &&  this.state.docName && this.state.pin){
-				new_cmd_soap_msg.ccmovelsign(this.state.user, this.state.applicationId, this.state.docName, undefined, this.state.pin)
+				new_cmd_soap_msg.ccmovelsign(this.state.user, this.state.applicationId, this.state.docName, undefined, this.state.pin, this.state.prod)
 					.then((result) => {
 						this.setState({ 
 							operation: 'CCMovelSign',
@@ -80,7 +81,7 @@ class App extends Component {
 
 		if(this.state.operation == 'CCMovelMultSignRequest' || this.state.operation == 'mms') {
 			if(this.state.user &&  this.state.docNames && this.state.pin){
-				new_cmd_soap_msg.ccmovelmultiplesign(this.state.user, this.state.applicationId, this.state.docNames, this.state.pin)
+				new_cmd_soap_msg.ccmovelmultiplesign(this.state.user, this.state.applicationId, this.state.docNames, this.state.pin, this.state.prod)
 					.then((result) => {
 						this.setState({ 
 							operation: 'CCMovelMultSignRequest',
@@ -105,7 +106,7 @@ class App extends Component {
 
 		if(this.state.operation == 'ValidateOTP' || this.state.operation == 'otp') {
 			if(this.state.code &&  this.state.processId){
-				new_cmd_soap_msg.validate_otp(this.state.code, this.state.processId, this.state.applicationId).then((result) => {
+				new_cmd_soap_msg.validate_otp(this.state.code, this.state.processId, this.state.applicationId, this.state.prod).then((result) => {
 					this.setState({ 
 						operation: 'ValidateOTP',
 						data: result });
@@ -142,11 +143,13 @@ App.propTypes = {
 	docName: PropTypes.string,
 	docNames: PropTypes.string,
 	code: PropTypes.number,
-	processId: PropTypes.number
+	processId: PropTypes.number,
+	prod: PropTypes.bool
 };
 
 App.defaultProps = {
 	applicationId: 'YjgyNjM1OWMtMDZmOC00MjVlLThlYzMtNTBhOTdhNDE4OTE2',
+	prod: false
 };
 
 module.exports = App;

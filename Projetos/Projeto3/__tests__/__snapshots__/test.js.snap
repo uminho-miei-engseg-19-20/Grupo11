@@ -26,6 +26,68 @@ exports[`Test CCMovelMultSignRequest 1`] = `
 </span>
 `;
 
+exports[`Test CCMovelMultSignRequest_erro 1`] = `
+Array [
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No user passed, use --user="XXX 000000000"
+    </span>
+  </span>,
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No docNames passed, use --docNames="xxxx.pdf","yyyy.pdf"
+    </span>
+  </span>,
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No pin passed, use --pin=xxxx
+    </span>
+  </span>,
+]
+`;
+
 exports[`Test CCMovelSign 1`] = `
 <span
   style={
@@ -52,6 +114,68 @@ exports[`Test CCMovelSign 1`] = `
 </span>
 `;
 
+exports[`Test CCMovelSign_erro 1`] = `
+Array [
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No user passed, use --user="XXX 000000000"
+    </span>
+  </span>,
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No docName passed, use --docName="xxxx.pdf"
+    </span>
+  </span>,
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No pin passed, use --pin=xxxx
+    </span>
+  </span>,
+]
+`;
+
 exports[`Test GetCertificate 1`] = `
 <span
   style={
@@ -75,4 +199,69 @@ exports[`Test GetCertificate 1`] = `
   </span>
    
 </span>
+`;
+
+exports[`Test GetCertificate_erro 1`] = `
+<span
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+  unstable__transformChildren={[Function]}
+>
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    No user passed, use --user="XXX 000000000"
+  </span>
+</span>
+`;
+
+exports[`Test ValidateOTP_erro 1`] = `
+Array [
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No code passed, use --code=XXXX
+    </span>
+  </span>,
+  <span
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+    unstable__transformChildren={[Function]}
+  >
+    <span
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+      unstable__transformChildren={[Function]}
+    >
+      No process id passed, use --processId1=XXXX
+    </span>
+  </span>,
+]
 `;
